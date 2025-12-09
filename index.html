@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Bbi Thảo, em có iu anh không?</title>
+
+<style>
+    body {
+        background: #ffe6f7;
+        text-align: center;
+        font-family: "Arial", sans-serif;
+        padding-top: 60px;
+        overflow-x: hidden;
+    }
+
+    h1 {
+        font-size: 34px;
+        color: #ff3fa3;
+        margin-bottom: 30px;
+        text-shadow: 0 0 15px white;
+        animation: fadeIn 1s ease;
+    }
+
+    /* Sprite Capoo */
+    #capoo {
+        width: 131px;
+        height: 131px;
+        background-image: url('capoo.png');
+        background-size: 525px 394px;
+        margin: auto;
+        margin-bottom: 30px;
+        animation: float 2s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-8px); }
+        100% { transform: translateY(0px); }
+    }
+
+    .btn-container {
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+        margin-top: 30px;
+        position: relative;
+    }
+
+    button {
+        padding: 14px 26px;
+        font-size: 22px;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: 0.25s ease;
+        position: relative;
+    }
+
+    #yes {
+        background: #ff75c8;
+        color: white;
+        box-shadow: 0 0 12px rgba(255, 100, 200, 0.5);
+    }
+    #yes:hover {
+        transform: scale(1.12);
+        background: #ff4db3;
+    }
+
+    #no {
+        background: #ddd;
+        color: #333;
+    }
+
+    /* Hiệu ứng trêu ngươi khi nút Không chạy */
+    @keyframes tease {
+        0% { transform: rotate(0deg) scale(1); }
+        50% { transform: rotate(6deg) scale(1.08); }
+        100% { transform: rotate(0deg) scale(1); }
+    }
+
+    @keyframes yesClick {
+        0% { transform: scale(1); }
+        40% { transform: scale(1.25); }
+        60% { transform: scale(0.9); }
+        100% { transform: scale(1); }
+    }
+
+    .heart-pop {
+        position: absolute;
+        font-size: 22px;
+        animation: popUp 0.6s forwards ease-out;
+        pointer-events: none;
+    }
+
+    @keyframes popUp {
+        0% { opacity: 1; transform: translateY(0) scale(1); }
+        100% { opacity: 0; transform: translateY(-60px) scale(1.8); }
+    }
+</style>
+</head>
+<body>
+
+<h1>Bbi Thảo, em có iu anh không?</h1>
+
+<div id="capoo"></div>
+
+<div class="btn-container">
+    <button id="yes">Có ❤️</button>
+    <button id="no">Không 💔</button>
+</div>
+
+<script>
+    /* ---------------- Sprite Animation ---------------- */
+    const FRAME_COLS = 4, FRAME_ROWS = 3, TOTAL = 12;
+    const frameW = 525 / FRAME_COLS, frameH = 394 / FRAME_ROWS;
+    let f = 0;
+    const capoo = document.getElementById("capoo");
+
+    setInterval(() => {
+        const col = f % FRAME_COLS;
+        const row = Math.floor(f / FRAME_COLS);
+        capoo.style.backgroundPosition = `-${col * frameW}px -${row * frameH}px`;
+        f = (f + 1) % TOTAL;
+    }, 90);
+
+    /* ---------------- Nút Không chạy trốn ---------------- */
+    const no = document.getElementById("no");
+    const yes = document.getElementById("yes");
+    const container = document.querySelector(".btn-container");
+
+    no.addEventListener("mouseover", () => {
+        const rectYes = yes.getBoundingClientRect();
+
+        let x, y;
+        let tries = 0;
+
+        do {
+            // nhảy xa hơn
+            x = (Math.random() * 500 - 250);
+            y = (Math.random() * 300 - 150);
+            tries++;
+        } while (
+            // tránh đè lên nút Có
+            (Math.abs(x) < 120 && Math.abs(y) < 80) && tries < 10
+        );
+
+        no.style.transform = `translate(${x}px, ${y}px)`;
+        no.style.animation = "tease 0.4s";
+
+        // nút Có phình ra nhẹ = dụ bấm ❤
+        yes.style.transform = "scale(1.15)";
+        setTimeout(() => yes.style.transform = "scale(1)", 250);
+    });
+
+    /* ---------------- Click nút Có ---------------- */
+    yes.onclick = (e) => {
+        // Hiệu ứng nút bounce
+        yes.style.animation = "yesClick 0.35s";
+
+        // Tạo trái tim bay lên
+        const heart = document.createElement("div");
+        heart.className = "heart-pop";
+        heart.innerHTML = "❤️";
+        document.body.appendChild(heart);
+
+        // đặt vị trí trái tim ngay trên nút
+        const rect = yes.getBoundingClientRect();
+        heart.style.left = rect.left + rect.width / 2 - 10 + "px";
+        heart.style.top = rect.top - 10 + "px";
+
+        // xoá heart sau animation
+        setTimeout(() => heart.remove(), 700);
+
+        // chuyển trang sau 350ms
+        setTimeout(() => {
+            window.location.href = "love.html";
+        }, 350);
+    };
+</script>
+
+</body>
+</html>
