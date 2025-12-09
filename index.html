@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#ff9a9e">
+<title>Bbi Thảo, em có iu anh không?</title>
+
+<style>
+    body {
+    background: linear-gradient(125deg, #ff9a9e, #fad0c4) !important;
+    color: white !important;
+}
+body {
+    min-height: 100vh;
+    background-attachment: fixed;
+}
+
+
+    body {
+        background: radial-gradient(circle at top, #ffd0e9, #ff9acb);
+        margin: 0; padding-top: 40px;
+        font-family: "Poppins", sans-serif;
+        text-align: center; overflow: hidden;
+        animation: bgShift 8s ease-in-out infinite alternate;
+    }
+    @keyframes bgShift {
+        0% { background: radial-gradient(circle at top, #ffd0e9, #ff9acb);} 
+        100% { background: radial-gradient(circle at bottom, #ffe7f7, #ff7ac0);} 
+    }
+    h1 {
+        font-size: clamp(20px, 5vw, 32px);
+        color: #ff3fa3; text-shadow: 0 0 18px white;
+        margin-bottom: 25px; animation: titleGlow 2s ease-in-out infinite;
+    }
+    @keyframes titleGlow {
+        0%,100% { transform: scale(1); filter: drop-shadow(0 0 6px #fff); }
+        50% { transform: scale(1.08); filter: drop-shadow(0 0 16px #ffb3e8); }
+    }
+
+    /* đặt capoo lên trên nút yes khi yes scale */
+    #capoo {
+        width: 131px; height: 131px;
+        background-image: url("capoo.png");
+        background-size: 525px 394px; margin: auto; margin-bottom: 30px;
+        animation: float 2s ease-in-out infinite;
+        filter: drop-shadow(0 0 10px rgba(255,255,255,.7));
+        position: relative;
+        z-index: 50; /* capoo nằm trên nút yes */
+    }
+    @keyframes float {
+        0% { transform: translateY(0) scale(1); }
+        50% { transform: translateY(-10px) scale(1.05); }
+        100% { transform: translateY(0) scale(1); }
+    }
+    .btn-container {
+        margin-top: 20px; display: flex; gap: 28px; justify-content: center; position: relative;
+    }
+    button {
+        padding: 16px 32px; font-size: clamp(18px, 4.5vw, 24px);
+        border: none; border-radius: 16px; cursor: pointer; transition: 0.25s ease;
+        font-weight: 600;
+        position: relative;
+        z-index: 10; /* nút dưới capoo */
+    }
+    #yes {
+        background: linear-gradient(135deg, #ff80d1, #ff4fb0);
+        color: white; box-shadow: 0 0 18px rgba(255,100,200,.6);
+    }
+    #no {
+        background: #fff; color: #333; border: 2px solid #ccc;
+    }
+    .heart-pop {
+        position: fixed; font-size: 24px; animation: popUp .6s ease-out forwards; pointer-events: none;
+        z-index: 9998;
+    }
+    @keyframes popUp {
+        0% { opacity:1; transform: translateY(0) scale(1); }
+        100% { opacity:0; transform: translateY(-60px) scale(1.8); }
+    }
+    .float-heart {
+        position: fixed; bottom: -40px; color: #ff5fbf; font-size: 20px;
+        animation: rise 5s linear infinite; opacity: 0.8; pointer-events: none;
+        z-index: 1;
+    }
+    @keyframes rise {
+        0% { transform: translateY(0) scale(1); opacity: .9; }
+        100% { transform: translateY(-120vh) scale(1.6); opacity: 0; }
+    }
+
+    /* bubble nhỏ (luôn ở trên cùng) */
+    .bubble {
+        position: fixed;
+        padding: 10px 14px;
+        background: rgba(255,255,255,0.97);
+        border-radius: 12px;
+        font-size: 15px;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+        transform: translateX(-50%) translateY(6px);
+        opacity: 0;
+        transition: opacity .32s ease, transform .32s ease;
+        z-index: 9999; /* luôn trên cùng */
+        pointer-events: none;
+    }
+
+    /* shake animation for no button */
+    @keyframes shake {
+        0% { transform: translate(0) rotate(0); }
+        20% { transform: translate(-8px, -2px) rotate(-6deg); }
+        40% { transform: translate(8px, 2px) rotate(6deg); }
+        60% { transform: translate(-6px, 2px) rotate(-4deg); }
+        80% { transform: translate(6px, -2px) rotate(4deg); }
+        100% { transform: translate(0) rotate(0); }
+    }
+</style>
+</head>
+<body>
+
+<h1>Bbi Thảo, em có iu anh hong? 💗</h1>
+
+<div id="capoo"></div>
+
+<div class="btn-container">
+    <button id="yes">Có ❤️</button>
+    <button id="no">Không 💔</button>
+</div>
+
+<script>
+/* -------------------- SPRITE -------------------- */
+const FRAME_COLS = 4, FRAME_ROWS = 3, TOTAL = 12;
+const frameW = 525 / FRAME_COLS, frameH = 394 / FRAME_ROWS;
+let f = 0;
+const capoo = document.getElementById("capoo");
+
+setInterval(() => {
+    const col = f % FRAME_COLS;
+    const row = Math.floor(f / FRAME_COLS);
+    capoo.style.backgroundPosition = `-${col * frameW}px -${row * frameH}px`;
+    f = (f + 1) % TOTAL;
+}, 90);
+
+/* -------------------- FLOATING HEARTS -------------------- */
+setInterval(() => {
+    const heart = document.createElement("div");
+    heart.className = "float-heart";
+    heart.innerHTML = "💖";
+    heart.style.left = Math.random() * window.innerWidth + "px";
+    heart.style.fontSize = (16 + Math.random()*22) + "px";
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 5200);
+}, 350);
+
+/* -------------------- BUTTONS -------------------- */
+const no = document.getElementById("no");
+const yes = document.getElementById("yes");
+
+let activeBubble = null;
+let noClickCount = 0;
+
+// khởi tạo scale cho nút yes
+yes.dataset.scale = yes.dataset.scale || "1";
+yes.style.transformOrigin = "center center";
+yes.style.transform = `scale(${yes.dataset.scale})`;
+
+/* tiện: style shake thêm 1 lần nếu chưa có */
+if (!document.getElementById("_shake_style")) {
+    const style = document.createElement("style");
+    style.id = "_shake_style";
+    style.innerHTML = `@keyframes shake { 0% { transform: translate(0) rotate(0); } 20% { transform: translate(-8px, -2px) rotate(-6deg); } 40% { transform: translate(8px, 2px) rotate(6deg); } 60% { transform: translate(-6px, 2px) rotate(-4deg); } 80% { transform: translate(6px, -2px) rotate(4deg); } 100% { transform: translate(0) rotate(0); } }`;
+    document.head.appendChild(style);
+}
+
+/* ẩn bubble hiện tại mượt */
+function hideActiveBubble() {
+    return new Promise(resolve => {
+        if (!activeBubble) return resolve();
+        activeBubble.style.opacity = "0";
+        activeBubble.style.transform = "translateX(-50%) translateY(-8px)";
+        setTimeout(() => {
+            if (activeBubble) {
+                activeBubble.remove();
+                activeBubble = null;
+            }
+            resolve();
+        }, 280);
+    });
+}
+
+/* tạo bubble */
+function createBubble(x, y, text, duration = 1500) {
+    // trước khi tạo, đảm bảo x,y nằm trong viewport
+    const bubble = document.createElement("div");
+    bubble.className = "bubble";
+    bubble.innerText = text;
+    bubble.style.left = `${x}px`;
+    bubble.style.top = `${Math.max(8, y)}px`;
+    document.body.appendChild(bubble);
+    activeBubble = bubble;
+    requestAnimationFrame(() => {
+        bubble.style.opacity = "1";
+        bubble.style.transform = "translateX(-50%) translateY(0)";
+    });
+    if (duration > 0) {
+        setTimeout(() => {
+            if (bubble === activeBubble) {
+                bubble.style.opacity = "0";
+                bubble.style.transform = "translateX(-50%) translateY(-8px)";
+                setTimeout(() => { if (bubble === activeBubble) { bubble.remove(); activeBubble = null; } }, 300);
+            }
+        }, duration);
+    }
+    return bubble;
+}
+
+/* hàm helper: di chuyển nút 'no' và trả về Promise khi transition kết thúc */
+function moveNoTo(x, y, rotationDeg=0) {
+    return new Promise(resolve => {
+        // đảm bảo position fixed
+        no.style.position = "fixed";
+        // lắng nghe transitionend 1 lần duy nhất
+        function onEnd(e) {
+            // chỉ quan tâm đến left/top transform (bảo đảm 1 lần)
+            no.removeEventListener('transitionend', onEnd);
+            // chờ chút để style settle
+            setTimeout(resolve, 40);
+        }
+        no.addEventListener('transitionend', onEnd, { once: true });
+        // kích hoạt transition
+        no.style.transition = "left .28s ease, top .28s ease, transform .28s ease";
+        no.style.left = `${x}px`;
+        no.style.top = `${y}px`;
+        no.style.transform = `rotate(${rotationDeg}deg)`;
+        // phòng trường hợp transitionend không được gọi (các trình duyệt hiếm khi), fallback:
+        setTimeout(() => {
+            // nếu event chưa fired, resolve (đảm bảo không treo)
+            try { no.removeEventListener('transitionend', onEnd); } catch(e){}
+            resolve();
+        }, 600);
+    });
+}
+
+/* --------------- HÀM TẠO BUBBLE --------------- */
+function createBubble(x, y, text) {
+    // Ẩn bubble cũ nếu có
+    if (activeBubble) {
+        activeBubble.remove();
+        activeBubble = null;
+    }
+
+    const bubble = document.createElement("div");
+    bubble.className = "bubble";
+    bubble.innerText = text;
+    bubble.style.position = "fixed";
+    bubble.style.left = `${x}px`;
+    bubble.style.top = `${y}px`;
+    bubble.style.padding = "10px 16px";
+    bubble.style.background = "rgba(255,255,255,0.95)";
+    bubble.style.borderRadius = "14px";
+    bubble.style.fontSize = "16px";
+    bubble.style.boxShadow = "0 0 10px rgba(0,0,0,0.2)";
+    bubble.style.transform = "translateX(-50%) translateY(8px)";
+    bubble.style.opacity = "0";
+    bubble.style.transition = "opacity .35s ease, transform .35s ease";
+    document.body.appendChild(bubble);
+    activeBubble = bubble;
+
+    // Show
+    requestAnimationFrame(() => {
+        bubble.style.opacity = "1";
+        bubble.style.transform = "translateX(-50%) translateY(0)";
+    });
+
+    return bubble;
+}
+
+/* --------------- NÚT KHÔNG --------------- */
+no.addEventListener("click", async () => {
+    // 1) Ẩn bubble hiện tại (nếu có)
+    if (activeBubble) {
+        activeBubble.remove();
+        activeBubble = null;
+    }
+
+    // 2) Tăng số lần bấm không
+    noClickCount++;
+
+    // 3) Tăng scale nút YES
+    let currentScale = parseFloat(yes.dataset.scale || "1");
+    currentScale += 0.18;
+    yes.dataset.scale = String(currentScale);
+    yes.style.transform = `scale(${currentScale})`;
+
+    // 4) Capoo nhảy nhẹ
+    capoo.style.transition = "transform .22s ease";
+    capoo.style.transform = "translateY(-18px) scale(1.03)";
+    setTimeout(() => capoo.style.transform = "translateY(0) scale(1)", 220);
+
+    // 5) Rung nút Không
+    no.style.animation = "shake .36s";
+    setTimeout(() => no.style.animation = "", 380);
+
+    // 6) Tính vị trí mới cho nút Không
+    const sw = window.innerWidth;
+    const sh = window.innerHeight;
+    const bw = no.offsetWidth;
+    const bh = no.offsetHeight;
+    const padding = 24;
+    const newX = Math.max(padding, Math.random() * (sw - bw - padding*2));
+    const newY = Math.max(padding, Math.random() * (sh - bh - padding*2));
+    const rotation = Math.random() * 40 - 20;
+
+    // 7) Di chuyển nút Không + chờ transition kết thúc
+    await new Promise(resolve => {
+        no.style.position = "fixed";
+        function onEnd(e) { 
+            no.removeEventListener("transitionend", onEnd);
+            setTimeout(resolve, 40); // đợi settle
+        }
+        no.addEventListener("transitionend", onEnd, { once: true });
+        no.style.transition = "left .28s ease, top .28s ease, transform .28s ease";
+        no.style.left = `${newX}px`;
+        no.style.top = `${newY}px`;
+        no.style.transform = `rotate(${rotation}deg)`;
+        setTimeout(resolve, 600); // fallback
+    });
+
+    // 8) Tạo bubble mới (giữ nguyên, không tự ẩn)
+    const bubbleX = newX + bw/2;
+    const bubbleY = newY - 40;
+    if (noClickCount >= 5) {
+        createBubble(bubbleX, bubbleY, "???");
+    } else {
+        createBubble(bubbleX, bubbleY, "Thảo ngố =))");
+    }
+
+    // 9) Nếu noClickCount >=7 -> hiển thị tip ở nút "Có"
+    if (noClickCount >= 7) {
+        setTimeout(() => {
+            const r = yes.getBoundingClientRect();
+            createBubble(r.left + r.width/2, r.top - 46, "bấm vào đây này!!!!!");
+        }, 500);
+    }
+});
+
+/* --------------- NÚT CÓ --------------- */
+yes.addEventListener("click", () => {
+    const rect = yes.getBoundingClientRect();
+
+    // 1️⃣ Búng nút Có lên + scale
+    yes.style.transition = "transform 0.35s ease";
+    yes.style.transform = "scale(1.25)";
+    setTimeout(() => yes.style.transform = "scale(1)", 350);
+
+    // 2️⃣ Capoo nhảy lên vui vẻ
+    capoo.style.transition = "transform 0.4s ease";
+    capoo.style.transform = "translateY(-28px) scale(1.1)";
+    setTimeout(() => capoo.style.transform = "translateY(0) scale(1)", 400);
+
+    // 3️⃣ Tạo mưa trái tim xung quanh nút
+    for (let i = 0; i < 12; i++) {
+        const heart = document.createElement("div");
+        heart.className = "heart-pop";
+        heart.innerHTML = "💖";
+        document.body.appendChild(heart);
+        // random x/y quanh nút
+        heart.style.left = rect.left + rect.width/2 + (Math.random()*120 - 60) + "px";
+        heart.style.top = rect.top + (Math.random()*20 - 10) + "px";
+        heart.style.fontSize = (16 + Math.random()*20) + "px";
+        heart.style.transition = "transform 0.7s ease, opacity 0.7s ease";
+        requestAnimationFrame(() => {
+            heart.style.transform = `translateY(-100px) scale(1.5) rotate(${Math.random()*360}deg)`;
+            heart.style.opacity = "0";
+        });
+        setTimeout(() => heart.remove(), 800);
+    }
+
+    // 4️⃣ Nhạc vui nho nhỏ (không bắt buộc, có thể thêm sau)
+    // let audio = new Audio('pop.mp3'); audio.play();
+
+    // 5️⃣ Chuyển trang sau hiệu ứng
+    setTimeout(() => window.location.href = "love.html", 700);
+});
+
+
+</script>
+
+</body>
+</html>
